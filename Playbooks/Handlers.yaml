@@ -1,0 +1,29 @@
+---                                                                                                 008-Handlers1.yaml                                                                                                            ---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Install Apache2
+     apt:
+      name: apache2
+      state: present
+      update_cache: no
+
+   - name: Allow HTTP traffic
+     ufw:
+      rule: allow
+      port: http
+      proto: tcp
+
+     notify:
+      - Restart apache2
+      - Reload UFW
+  handlers:
+   - name: Restart apache2
+     service:
+        name:  apache2
+        state: restarted
+
+   - name: Reload UFW
+     ufw:
+         state: enabled
+
