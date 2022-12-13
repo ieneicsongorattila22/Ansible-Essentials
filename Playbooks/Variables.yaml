@@ -1,0 +1,49 @@
+---
+- hosts: all
+  vars_files: Constants\vars.yaml
+  become: true
+
+  tasks:
+  - name: Install Samba
+    apt:
+      name: samba
+      state: present
+      update_cache: no
+
+  - name: Create shared directory
+    file:
+      path: "{{ mainpath }}"
+      state: directory
+
+  - name: Create Samba configuration
+    template:
+      src: Constants\"sambaConf.j2"
+      dest: "/etc/samba/smb.conf"
+    notify: Restart Samba
+
+  - name: Create readonly folder
+    file:
+      path: "{{ mainpath['readonlypath']  }}"
+      state: directory
+      owner: "{{ username }}"
+      mode: '0771'
+
+  - name: Create readwrite folder
+    file:
+      path: "{{ mainpath['readwritepath'] }}"
+      state: directory
+      owner: "{{ username }}"
+      mode: '0777'
+
+  - name: Allow Samba traffic
+    ufw:
+      rule: allow
+      port: "{{ item }}"
+    with_items:
+       - "{{ ports }}"
+
+  handlers:
+   - name: Restart Samba
+      service:
+        name:  samba
+        state: restarted

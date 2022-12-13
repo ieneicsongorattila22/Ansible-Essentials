@@ -1,0 +1,14 @@
+---                                                                              Variables.yaml                                                                                                 ---
+mainpath: /home/{{ username }}/sharedfolder/
+ readonlypath: readonly
+ readwritepath: readwrite
+ports:
+  - "137"
+  - "138"
+  - "139"
+  - "445"
+
+
+
+
+

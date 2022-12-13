@@ -1,9 +1,0 @@
----
-
-- hosts: all
-  tasks:
-   - name: do uname
-     shell: uname -a > /home/labroot/results.txt
-  
-   - name: whoami
-     shell: whoami >> /home/labroot/results.txt
